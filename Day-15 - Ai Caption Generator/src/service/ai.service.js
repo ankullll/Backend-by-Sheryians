@@ -1,16 +1,30 @@
-const { GoogleGenAI }= require("@google/genai");
+const { GoogleGenAI } = require("@google/genai");
 
-const ai = new GoogleGenAI({
-    apiKey : ""
-});
+const ai = new GoogleGenAI({});
 
-async function main() {
+
+async function generateCaption(base64ImageFile) {
+  const contents = [
+    {
+      inlineData: {
+        mimeType: "image/jpeg",
+        data: base64ImageFile,
+      },
+    },
+    { text: "Caption this image." },
+  ];
+
   const response = await ai.models.generateContent({
     model: "gemini-3.5-flash",
-    contents: "Explain how AI works in a few words",
+    contents: contents,
+    config:{
+      systemInstruction:`You are an stylish morder expert caption generation.
+      Generation only one single line caption.
+      caption should be short clear and concise.
+      You can you hastags and emojis in caption`
+    }
   });
-
-  console.log(response.text);
+  return response.text;
 }
 
-main();
+module.exports = generateCaption;
