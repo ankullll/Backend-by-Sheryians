@@ -1,0 +1,103 @@
+discord automation bot 
+
+sabse pehle dicord pe ek serer banana hai 
+uske bad us server ke andar ek channel banana hai
+
+
+
+usek bad discord developer portal pe janan hai
+waha jake ek naya application vanana hai
+waha ek bot banana hai jiska nam kuch bhi rakh sakte h 
+
+
+fir application ke andar aake "Oauth2" me aana hai
+waha jake niche bot select karna hai 
+uske bad permission deni h ,,   default me administrator select kr lege 
+
+uske bad ek link milege 
+
+us link ko hme browser me copy karke paste karna h
+
+then popup se add bot kar dege 
+fir hamre server me ek bot add ho jayega
+
+
+
+uske bad ek backend start krna h init -y se 
+
+uske bad discord.js,dotenv ko install krna h
+
+ukse bad developer portal pe jake reset token karna 
+fir token  ko copy krke .env file me store kar lege 
+
+
+uske bad {Client,GatewayIntentBits} ko discord..js se import kar lege
+
+
+uske bad ek const client = new Client ({
+    intents:[
+        GatewayIntentBits.Guilds  ===> ye server ki information read krna allow karta hai 
+        GatewayIntentBits.GuildsMessages ========> Ye allow karta hai ke guild me message aa rhe hai unko track kr sakte
+        GatewayIntentBits.MessageContent =========> ye message ke andar ka content access krne deta h bot ko 
+
+    ]
+})
+
+
+
+
+iske bad client.login(BOT_TOken)
+
+
+uske bad check krlo client.once("ready",()=>{
+    console.log("Bot is ready")
+})
+
+Note => Bot me jake 3 intent  permission allow krni padegi,  Kabhi kabhi dns bhi add krna padta hai 
+const dns = require("node:dns")
+dns.setServers = ['8.8.8.8','1.1.1.1']
+
+
+
+client.on("messageCreate",(message)=>{
+    console.log(`message received: ${message.content}`)    ========> isse jese hi koi discord pe message krega bese hi message print hoga
+})
+
+
+
+ab agar hme message ka reply bot se karana hai to 
+client.on("messageCreate",(message)=>{
+    const isBot = message.author.bot;    =======> is line se hme pata chalega msg user ne kiya hai ya bot ne 
+    ========> agar hm is check ko nhi krege to jo msg bot krega uska reply bot khud krne lagega #infiniteLoop
+
+    if(isBot) return;
+    message.reply("Jo bhi reply bhejna chaho")
+})
+
+
+ab agar hme chatbot banana ho to fir
+
+
+sabse pehle npm install @google/genai
+
+uske bad const {GoogleGenAi} = require("@google/genai)
+
+const ai = new GoogleGenAi({})
+
+uske bad ek async function banayege generateContent({
+    const response = await ai.models.generateContent({
+        model:"gemini-3.6-flash",
+        contents:prompt
+})
+return response.text 
+})
+
+client.on("messageCreate",async (message)=>{
+    const isBot = message.author.bot;
+    if(isBot) return;
+
+    const res = await generateContent(message.content)
+    if(res) message.reply(res)
+})
+
+
