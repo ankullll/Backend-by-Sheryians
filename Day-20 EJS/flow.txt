@@ -1,0 +1,22 @@
+=> sabse  pehle ejs install krege
+
+=> uske bad ek view nam ka folder banayege ,parent folder me
+
+
+=> uske bad ek index.ejs banayege view ke andar
+
+
+=>   iske bad hm app.set("view engine","ejs")
+
+=> iske bad me morgan install krege , ye ek logger hai hmare server ki activities ko track krega  
+
+
+=> const morgan = require("morgan")
+
+=>  app.use(morgan("dev"))
+
+
+=> koi bhi get method api bana ke uske output me agar ejs frontend run krna hai ho res.render("ejs file ka name without extenstion")
+
+
+

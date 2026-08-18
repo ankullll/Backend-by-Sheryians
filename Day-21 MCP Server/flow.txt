@@ -1,0 +1,53 @@
+=> MCP = model context protocol, an open standard created by Anthropic that lets AI models safely connect to external tools, databases, and data sources.
+
+
+=> sabse pehle npm install @modelcontextprotocol/sdk zod
+
+=> zod package se hm input ka type define krte hai or type ko validatre bhi karte hai
+
+
+=> import { McpServer } from "@modelcontextprotocol/server";
+=> import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
+=> import { z } from "zod/v4";
+
+
+=> const server = new McpServer({ name: "demo-server", version: "1.0.0" });
+is line se hm ek new mcp server create krege ,jiska naam kuch bhi rakh skte h,version yhi dalna hai
+
+
+=> server.registerTool("add",{
+    title:"addition tool",
+    description: "Add two numbers",
+    inputSchema: z.object({
+        a:z.number().describe("First Number"),
+        b:z.number().describe("Second number")
+
+    })
+  },
+  async ({a,b}) => {
+   return{ content: [{ type: "text", text: String(a+b) }],}
+  },
+);
+
+
+isse hm ek tool banayege jisse Ai, LLM usko use kr skte sabse phle tool ka name,then {
+    title tool ka;
+    disciption ,
+    inputSchema me define krege ke aane wale values ka kya type hai ,
+}
+
+tool ke bad registerTool ke andar hi async function banayege jo kaam krega 
+ jiska return {
+    content:[type:""text" ,text:String(a+b)]
+ }
+
+
+
+
+ =>   const transport = new StdioServerTransport();
+    isse hmara stdio server communicate kr skega 
+
+ =>    await server.connect(transport);
+     isse hmara server run krne lagega 
+
+
