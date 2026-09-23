@@ -1,0 +1,28 @@
+==> firstly create a basic backend server 
+
+then install razorpay
+
+database connect krlo 
+
+github pe difference backend repo se reference lelo
+
+payment ka model banao 
+
+payment model ke andar orderId,paymentId, signature, amount{price,currency},status{enum[PENDING,COMPLETED,Failed],default PENDING} honi chahiye ,
+
+pehle payment routes banane hai
+
+use  andar create order or verify do routes banane hai
+
+payment controller bananana hai 
+
+then import Razorpay = razorpay
+
+
+const razorpay = new Razorpay({
+    key_id:process.env.RAZORPAY_KEY_ID,
+    key_secret:process.env.RAZORPAY_KEY_SECRET
+})
+aise new instancce bana lena hai
+
+
