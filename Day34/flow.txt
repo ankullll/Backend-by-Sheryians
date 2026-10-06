@@ -1,0 +1,21 @@
+MONOLITH ARCHITECTURE
+in monolith we have all  the services in a single server
+
+
+
+MICROSERVICE ARCHITECTURE
+it contains multiple servers 
+each server is acting as a service => that why called microservice ARCHITECTURE
+benefit of microservice is SCALABILITY 
+
+vertical scaling means upgrading the CPU Ram etc
+horizontal scaling means creating replicate servers 
+
+the drawback of monolith is if a service is facing high traffic ,we can scale but the unnecessary others 
+services also scaled up thats why this is inefficient ,more use of resources 
+
+in microservice we can scale only that server which is having higher traffic => optimized and better use of resourse 
+
+
+if we have team size of 2-5 or simple web app then we can use monolith ARCHITECTURE because using MICROSERVICE ARCHITECTURE for this is over engineering
+
