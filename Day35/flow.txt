@@ -1,0 +1,17 @@
+we are going to start a new project 
+based on microservices ARCHITECTURE
+
+this project is consists of 7 micro services
+1.auth
+2.products 
+3.cart
+4. notification
+5.ai smart buddy
+6.payments 
+7.orders 
+8. notification
+
+we use rabbit MQ for notification 
+for payments we use Razorpay 
+
+its a mern + Ai project
