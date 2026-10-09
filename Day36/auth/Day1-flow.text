@@ -1,0 +1,13 @@
+we are starting our new project from today 
+sabse pehle basic server ko establish krege 
+uske bad database connect krege 
+uske bad hm user schema banayege 
+hm is project me test driven development karege (TDD)
+
+api karne se pehle hm jest se test cases likhegfe uske bad unhi ke according api design krege 
+
+uske bad hm auth.register.js route banayege 
+uske bad hm controller banayege for creating register user 
+lekin jo data fronend se ayega uske format galat ho sakta hai to pehle hm express validator ko use krege
+uske bad hm middleware banyege validator.middleware.js
+
