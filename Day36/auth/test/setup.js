@@ -1,49 +1,22 @@
-require("dotenv").config();
-
-if (!process.env.JWT_SECRET) {
-  process.env.JWT_SECRET = "test-only-secret-for-jest";
-}
+process.env.JWT_SECRET = "1df822c4adb4119ea5fd19b06464c25062ef8e8d899031b521836a1f9949687b";
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
-let mongo;
-
-jest.setTimeout(60000);
+jest.setTimeout(30000);
+let mongoServer;
 
 beforeAll(async () => {
-  mongo = await MongoMemoryServer.create({
-    binary: {
-      version: "8.0.12",
-      systemBinary:
-        "C:\\Users\\ankul\\.cache\\mongodb-binaries\\mongod-x64-win32-8.0.12.exe",
-    },
+  mongoServer = await MongoMemoryServer.create();
+
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri,{
+      serverSelectionTimeoutMS: 5000,
   });
 
-  const uri = mongo.getUri();
-
-  process.env.MONGODB_URI = uri;
-
-  await mongoose.connect(uri, {
-    serverSelectionTimeoutMS: 10000,
-  });
-}, 60000);
-
-afterEach(async () => {
-  if (mongoose.connection.readyState !== 1) return;
-
-  for (const collection of Object.values(
-    mongoose.connection.collections
-  )) {
-    await collection.deleteMany({});
-  }
 });
 
-afterAll(async () => {
-  if (mongoose.connection.readyState !== 0) {
-    await mongoose.disconnect();
-  }
+afterAll(async ()=>{
+    await mongoose.disconnect()
+    await mongoServer.stop()
 
-  if (mongo) {
-    await mongo.stop();
-  }
-}, 60000);
+})
