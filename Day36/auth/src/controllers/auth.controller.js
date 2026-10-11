@@ -2,7 +2,7 @@ const { default: mongoose } = require("mongoose");
 const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const redis = require("../db/redis")
+const redis = require("../db/redis");
 
 async function registerUser(req, res) {
   try {
@@ -133,23 +133,111 @@ async function getCurrentUser(req, res) {
     .json({ message: "current user fetched successfully", user: req.user });
 }
 
-async function logoutUser(req,res) {
+async function logoutUser(req, res) {
   const token = req.cookies.token;
 
-  if(token){
-    await redis.set(`blacklist:${token}`,"true","EX",24*60*60);
+  if (token) {
+    await redis.set(`blacklist:${token}`, "true", "EX", 24 * 60 * 60);
   }
 
-  res.clearCookie('token',{
-    httpOnly:true,
-    secure:true
-  })
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+  });
 
-  return res.status(200).json({message:"User logged out successfully"})
+  return res.status(200).json({ message: "User logged out successfully" });
 }
+
+async function getUserAddresses(req, res) {
+  const id = req.user.id;
+
+  const user = await userModel.findById(id).select("addresses");
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  return res.status(200).json({
+    message: "user addresses fetched successfully",
+    addresses: user.addresses,
+  });
+}
+
+async function addUserAddress(req, res) {
+  const id = req.user.id;
+
+  const { street, city, state, pincode, country, isDefault } = req.body;
+
+  const user = await userModel.findOneAndUpdate(
+    { _id: id },
+    {
+      $push: {
+        addresses: {
+          street,
+          city,
+          state,
+          pincode,
+          country,
+          isDefault,
+        },
+      },
+    },
+    { new: true },
+  );
+
+  if(!user){
+    return res.status(404).json({
+      message:"User not found"
+    })
+  }
+
+  return res.status(201).json({
+    message:"Addresses updated successfully",
+    address:user.addresses[user.addresses.length - 1]
+  })
+}
+
+
+async function deleteUserAddress(req,res) {
+  const id = req.user.id;
+
+  const {addressId} = req.params;
+
+  const isAddressExists = await userModel.findOne({_id:id,"addresses._id":addressId})
+  if(!isAddressExists){
+    return res.status(404).json({
+      message:"Adress not found"
+    })
+  }
+  const user = await userModel.findOneAndUpdate({_id:id},{
+    $pull:{
+      addresses:{_id:addressId}
+    }
+  },{new:true})
+
+  if(!user){
+    return res.status(404).json({message:"User not found"})
+  }
+
+  const addressExists = user.addresses.some(addr=>addr._id.toString() === addressId);
+
+  if(addressExists){
+    return res.status(500).json({message:"Failed to delete address"})
+  }
+
+
+  return res.status(200).json({
+    message:"Address deleted successfully",
+    addresses:user.addresses
+  })
+}
+
 module.exports = {
   registerUser,
   loginUser,
   getCurrentUser,
-  logoutUser
+  logoutUser,
+  getUserAddresses,
+  addUserAddress,
+  deleteUserAddress
 };
