@@ -10,6 +10,7 @@ async function registerUser(req, res) {
       username,
       email,
       password,
+      role,
       fullName: { firstName, lastName },
     } = req.body;
 
@@ -32,6 +33,7 @@ async function registerUser(req, res) {
       username,
       email,
       password: hash,
+      role,
       fullName: { firstName, lastName },
     });
 
