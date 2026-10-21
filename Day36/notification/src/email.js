@@ -1,4 +1,3 @@
-require("dotenv").config()
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -39,6 +38,5 @@ const sendEmail = async (to, subject, text, html) => {
   }
 };
 
-sendEmail("ankulsingh975@gmail.com","Supernova Notification","Test","<b>This notification service is working new</b>")
 
 module.exports = sendEmail;

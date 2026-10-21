@@ -1,5 +1,10 @@
-require("dotenv").config()
-const sendEmail = require("./src/email")
+require("dotenv").config();
+const app =require("./src/app")
 
 
-sendEmail("ankulsingh975@gmail.com","Supernova Notification","Test","<b>This notification service is working</b>")
+
+
+
+app.listen(3006,()=>{
+    console.log("Notification service is running on port 3006")
+})
