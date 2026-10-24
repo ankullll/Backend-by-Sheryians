@@ -33,6 +33,14 @@ async function createPayment(req, res) {
       },
     });
 
+    await publishToQueue("PAYMENT_SELLER_DASHBOARD.PAYMENT_CREATED", payment);
+    await publishToQueue("PAYMENT_NOTIFICATION.PAYMENT_INITIATED", {
+      email: req.user.email,
+      orderId: orderId,
+      amount: price.amount / 100,
+      currency: price.currency,
+      username:req.user.username
+    });
     return res.status(201).json({ message: "Payment initiated", payment });
   } catch (error) {
     console.log(error);
@@ -78,9 +86,11 @@ async function verifyPayment(req, res) {
       orderId: payment.order,
       email: req.user.email,
       paymentId: payment.paymentId,
-      amount:payment.price.amount / 100,
-      currency:payment.price.currency,
+      amount: payment.price.amount / 100,
+      currency: payment.price.currency,
     });
+
+    await publishToQueue("PAYMENT_SELLER_DASHBOARD.PAYMENT_UPDATE", payment);
 
     return res
       .status(200)
@@ -89,10 +99,8 @@ async function verifyPayment(req, res) {
     console.log(error);
     await publishToQueue("PAYMENT_NOTIFICATION.PAYMENT_FAILED", {
       email: req.user.email,
-      paymentId:paymentId,
-      orderId:razorpayOrderId,
-      
-     
+      paymentId: paymentId,
+      orderId: razorpayOrderId,
     });
     return res.status(500).json({ message: "Internal server error" });
   }
