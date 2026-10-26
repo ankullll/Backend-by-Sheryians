@@ -11,7 +11,7 @@ const searchProduct = tool(
     console.log("Token received:", Boolean(token));
 
     const response = await axios.get(
-      "http://localhost:3001/api/products",
+      "http://nova-alb-2064232069.ap-southeast-2.elb.amazonaws.com/api/products",
       {
         params: { q: query },
         headers: {
@@ -37,7 +37,7 @@ const addProductToCart = tool(
     if (!token) throw new Error("Authentication token missing");
 
     const response = await axios.post(
-      "http://localhost:3002/api/cart/items",
+      "http://nova-alb-2064232069.ap-southeast-2.elb.amazonaws.com/api/cart/items",
       { productId, qty },
       {
         headers: {
